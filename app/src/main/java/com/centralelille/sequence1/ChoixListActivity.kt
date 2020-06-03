@@ -4,22 +4,22 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.Toast
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.centralelille.sequence1.data.ListeToDo
 import com.centralelille.sequence1.data.ProfilListeToDo
 import com.google.gson.Gson
 
-
 class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var refOkBtn : Button
-    private lateinit var listOfList: ListView
     private lateinit var refTxtNewList: EditText
+    private lateinit var listOfList: RecyclerView
 
     private lateinit var prefs: SharedPreferences
     private lateinit var prefsListes: SharedPreferences
@@ -37,16 +37,21 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
         prefsListes = getSharedPreferences("DATA",0)
 
         refOkBtn = findViewById(R.id.buttonNewList)
+        listOfList = findViewById(R.id.listOfList)
         refTxtNewList = findViewById(R.id.editText)
 
-        // Loads a list of recipe objects from a JSON asset
-        //val recipeList = Recipe.getRecipesFromFile("recipes.json", this)
-        // Creates an array of
-        //val listItems = arrayOfNulls<String>(recipeList.size)
+        listeListeToDo = getLists(pseudoRecu)
+
+        val dataSet : MutableList<String> = mutableListOf()
+
+        repeat(listeListeToDo.size) {
+            dataSet.add(listeListeToDo[it].titreListeToDo)
+        }
+        val adapter = ItemAdapter(dataSet)
+        listOfList.adapter = adapter
+        listOfList.layoutManager = LinearLayoutManager(this)
 
         refOkBtn.setOnClickListener(this)
-
-        listeListeToDo = getLists(pseudoRecu)
     }
 
     //On crée une fonction qui accède à la liste des Liste si le pseudo est déjà enregistré
@@ -110,5 +115,29 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(applicationContext, s, duration)
         toast.show()
+    }
+
+    class ItemAdapter(val dataSet: List<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        override fun getItemCount(): Int = dataSet.size
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            val inflater: LayoutInflater = LayoutInflater.from(parent.context)
+            val itemView = inflater.inflate(R.layout.liste, parent, false)
+            return ItemViewHolder(itemView)
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            val title: String = dataSet[position]
+            (holder as ItemViewHolder).bind(title)
+        }
+
+        class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            private val textView: TextView = itemView.findViewById(R.id.title)
+
+            fun bind(title: String) {
+                textView.text = title
+            }
+        }
     }
 }
