@@ -6,4 +6,5 @@
     <string name="pseudoText">Pseudo :</string>
     <string name="nouvelle_liste">Nouvelle Liste</string>
     <string name="nouvel_item">Nouvel Item</string>
+    <string name="name_of_list">Name of list</string>
 </resources>
