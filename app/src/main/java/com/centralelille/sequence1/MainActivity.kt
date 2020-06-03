@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         refEdtPseudo = findViewById(R.id.editPseudo)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
+
         refBtnOk.setOnClickListener(this)
         refEdtPseudo.setOnClickListener(this)
     }
@@ -39,6 +41,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onStart()
 
         pseudoPrefs = prefs.getString("pseudo_prefs","Name")
+        //Log.i("test",prefs.getString("rien","Name"))
+
+
         refEdtPseudo.setText(pseudoPrefs)
     }
 
