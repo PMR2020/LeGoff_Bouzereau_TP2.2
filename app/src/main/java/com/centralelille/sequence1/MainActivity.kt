@@ -11,6 +11,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 
+/**
+ * Commentaire
+ *
+ */
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var refBtnOk: View
