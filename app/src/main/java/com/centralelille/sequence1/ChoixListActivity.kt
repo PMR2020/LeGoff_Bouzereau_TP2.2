@@ -4,9 +4,12 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import com.centralelille.sequence1.data.ListeToDo
+import com.centralelille.sequence1.data.ProfilListeToDo
 
 class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -27,7 +30,17 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
         var bundlePseudo: Bundle = this.getIntent().getExtras()
         var pseudo = bundlePseudo.getString("pseudo")
         when(v?.id){
-            R.id.buttonNewList->alert(pseudo)
+            R.id.buttonNewList->{
+                alert(pseudo)
+
+                var p = ProfilListeToDo(pseudo)
+                var l = ListeToDo("Liste1")
+                p.listesToDo.add(l)
+                Log.i("objet",p.toString()) ;
+            }
+
+
+
         }
     }
 
