@@ -10,31 +10,32 @@
         android:id="@+id/pseudoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pseudo : "
-        android:textSize="36dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editPseudo"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/pseudoText"
+        android:textSize="36sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editPseudo"
-        android:layout_width="253dp"
-        android:layout_height="70dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
-        android:textSize="36dp"
+        android:text="@string/name"
+        android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/pseudoText"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/okButton"
+        android:id="@+id/buttonNewItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ok"
+        android:text="@string/okButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editPseudo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

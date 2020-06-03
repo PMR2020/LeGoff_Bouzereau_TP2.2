@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Sequence1</string>
     <string name="preferences">Préférences</string>
+    <string name="name">Name</string>
+    <string name="okButton">Ok</string>
+    <string name="pseudoText">Pseudo :</string>
+    <string name="nouvelle_liste">Nouvelle Liste</string>
+    <string name="nouvel_item">Nouvel Item</string>
 </resources>
