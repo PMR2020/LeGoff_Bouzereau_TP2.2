@@ -1,5 +1,7 @@
 package com.centralelille.sequence1.data
 
-data class ProfilListeToDo (val login:String) {
+import java.io.Serializable
+
+data class ProfilListeToDo (val login:String): Serializable{
     var listesToDo: ArrayList<ListeToDo> = ArrayList<ListeToDo>()
 }
