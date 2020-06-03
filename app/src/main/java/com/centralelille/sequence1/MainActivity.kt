@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         setContentView(R.layout.activity_main)
 
-        refBtnOk = findViewById(R.id.okButton)
+        refBtnOk = findViewById(R.id.buttonNewItem)
         refEdtPseudo = findViewById(R.id.editPseudo)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
         when(v?.id){
-            R.id.okButton->{
+            R.id.buttonNewItem->{
                 var editor: SharedPreferences.Editor = prefs.edit()
                 editor.clear()
                 editor.putString("pseudo_prefs",pseudo)

@@ -7,6 +7,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ListView
 import android.widget.Toast
 import com.centralelille.sequence1.data.ListeToDo
 import com.centralelille.sequence1.data.ProfilListeToDo
@@ -15,6 +16,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var refOkBtn : Button
     private lateinit var prefs: SharedPreferences
+    private lateinit var listOfList: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +24,12 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         refOkBtn = findViewById(R.id.buttonNewList)
+        listOfList = findViewById(R.id.ListOfList)
+
+        // Loads a list of recipe objects from a JSON asset
+        //val recipeList = Recipe.getRecipesFromFile("recipes.json", this)
+        // Creates an array of
+        //val listItems = arrayOfNulls<String>(recipeList.size)
 
         refOkBtn.setOnClickListener(this)
     }
