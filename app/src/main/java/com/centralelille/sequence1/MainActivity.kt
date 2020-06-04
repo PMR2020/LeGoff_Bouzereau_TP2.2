@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
 
-        pseudoPrefs = prefs.getString("pseudo_prefs","Name")
+        pseudoPrefs = prefs.getString("pseudo_prefs", "Name")
         //Log.i("test",prefs.getString("rien","Name"))
 
 
@@ -50,17 +50,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         var pseudo = refEdtPseudo.text.toString()
         var bundlePseudo = Bundle()
-        bundlePseudo.putString("pseudo",pseudo)
+        bundlePseudo.putString("pseudo", pseudo)
 
-
-        when(v?.id){
-            R.id.buttonNewItem->{
+        when (v?.id) {
+            R.id.buttonNewItem -> {
                 var editor: SharedPreferences.Editor = prefs.edit()
                 editor.clear()
-                editor.putString("pseudo_prefs",pseudo)
+                editor.putString("pseudo_prefs", pseudo)
                 editor.apply()
 
-                var afficherChoixListActivity : Intent =  Intent(this, ChoixListActivity::class.java)
+                var afficherChoixListActivity: Intent = Intent(this, ChoixListActivity::class.java)
                 afficherChoixListActivity.putExtras(bundlePseudo)
                 startActivity(afficherChoixListActivity)
             }
@@ -75,10 +74,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var id = item.itemId
-        when(id){
+        when (id) {
             R.id.menu_prefs -> {
                 alert("appuis sur menu pref")
-                var afficherPrefs : Intent =  Intent(this, SettingsActivity::class.java)
+                var afficherPrefs: Intent = Intent(this, SettingsActivity::class.java)
                 startActivity(afficherPrefs)
             }
         }
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     //Gestion deboguage
-    fun alert(s: String){
+    fun alert(s: String) {
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(applicationContext, s, duration)
         toast.show()
