@@ -6,4 +6,5 @@
             android:key="pseudo_prefs"
             android:title="Pseudo"/>
     </PreferenceCategory>
+    <PreferenceCategory android:title="Historique"/>
 </PreferenceScreen>

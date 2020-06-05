@@ -35,6 +35,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
         pseudoRecu = bundlePseudo.getString("pseudo")
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         prefsListes = getSharedPreferences("DATA",0)
+        Log.i("testchoixlistact",prefsListes.all.toString())
 
         refOkBtn = findViewById(R.id.buttonNewList)
         refTxtNewList = findViewById(R.id.editText)
@@ -55,7 +56,6 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
     fun getLists(pseudo: String): ArrayList<ListeToDo>{
         var profil: String = prefsListes.getString(pseudo,"New")
         var gson = Gson()
-        Log.i("testchoixlistact",pseudo)
 
         if (profil=="New"){
             //On crée un nouvel objet ProfilListeToDo qu'on stocke sous format JSON dans les préférences sous son pseudo
@@ -66,9 +66,8 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
             Log.i("testchoixlistact","création d'un nouveau profil")
 
             var editor: SharedPreferences.Editor = prefsListes.edit()
-            editor.clear()
             editor.putString(pseudo,newProfilJSON)
-            editor.apply()
+            editor.commit()
 
             return(newProfil.listesToDo)
         }
@@ -99,7 +98,6 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener {
         var newProfilJSON: String = gson.toJson(profilListeToDo)
 
         var editor: SharedPreferences.Editor = prefsListes.edit()
-        editor.clear()
         editor.putString(pseudoRecu,newProfilJSON)
         editor.apply()
 
