@@ -5,10 +5,10 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,13 +17,13 @@ import com.centralelille.sequence1.data.ListeToDo
 import com.centralelille.sequence1.data.ProfilListeToDo
 import com.google.gson.Gson
 
-class ChoixListActivity() : AppCompatActivity(), View.OnClickListener, ListeAdapter.OnListListener {
+class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListeAdapter.OnListListener {
 
     private val adapter = newAdapter()
 
     private lateinit var refOkBtn: Button
     private lateinit var refTxtNewList: EditText
-    private lateinit var listOfList: RecyclerView
+    private lateinit var refRecycler: RecyclerView
 
     private lateinit var prefs: SharedPreferences
     private lateinit var prefsListes: SharedPreferences
@@ -42,21 +42,16 @@ class ChoixListActivity() : AppCompatActivity(), View.OnClickListener, ListeAdap
         prefsListes = getSharedPreferences("DATA", 0)
 
         refOkBtn = findViewById(R.id.buttonNewList)
-        listOfList = findViewById(R.id.listOfList)
+        refRecycler = findViewById(R.id.listOfList)
         refTxtNewList = findViewById(R.id.editText)
 
         listeListeToDo = getLists(pseudoRecu)
-        val dataSet: MutableList<String> = mutableListOf()
 
-        repeat(listeListeToDo.size) {
-            dataSet.add(listeListeToDo[it].titreListeToDo)
-        }
+        adapter.showData(listeListeToDo)
+        refRecycler.adapter = adapter
+        refRecycler.layoutManager = LinearLayoutManager(this)
 
-        //val adapter = ItemAdapter(dataSet)
-        listOfList.adapter = adapter
-        listOfList.layoutManager = LinearLayoutManager(this)
-
-        // Click listener associé au boutton pour créer les listes
+        // Click listener associé au boutton pour créer les listes et les sauvergarder
         refOkBtn.setOnClickListener(this)
     }
 
@@ -64,22 +59,22 @@ class ChoixListActivity() : AppCompatActivity(), View.OnClickListener, ListeAdap
     //et qui crée un nouveau Profil et le stock dans les préférences si le pseudo rentré n'a jamais ete utilisé
 
     fun getLists(pseudo: String): ArrayList<ListeToDo> {
-        var profil: String = prefsListes.getString(pseudo, "New")
+        val profil: String = prefsListes.getString(pseudo, "New")
         val gson = Gson()
         Log.i("testchoixlistact", pseudo)
 
         if (profil == "New") {
             //On crée un nouvel objet ProfilListeToDo qu'on stocke sous format JSON dans les préférences sous son pseudo
-            val newProfil: ProfilListeToDo = ProfilListeToDo(pseudo)
+            val newProfil = ProfilListeToDo(pseudo)
             val newProfilJSON: String = gson.toJson(newProfil)
             Log.i("testchoixlistact", "création d'un nouveau profil")
 
             val editor: SharedPreferences.Editor = prefsListes.edit()
-            //editor.clear()
+            editor.clear()
             editor.putString(pseudo, newProfilJSON)
             editor.apply()
 
-            return (newProfil.listesToDo)
+            return newProfil.listesToDo
         } else {
             val profilListeToDo: ProfilListeToDo =
                 gson.fromJson(profil, ProfilListeToDo::class.java)
@@ -102,17 +97,18 @@ class ChoixListActivity() : AppCompatActivity(), View.OnClickListener, ListeAdap
         when (v?.id) {
             R.id.buttonNewList -> {
                 alert(pseudoRecu)
-
                 val l = ListeToDo(newListTitle)
                 profilListeToDo.listesToDo.add(l)
                 Log.i("testchoixlistact", profilListeToDo.toString())
                 Log.i("testchoixlistact", "Listes " + profilListeToDo.listesToDo.toString())
             }
         }
+
         val newProfilJSON: String = gson.toJson(profilListeToDo)
 
-        var editor: SharedPreferences.Editor = prefsListes.edit()
-        //editor.clear()
+        // Edit shared preference (to put data)
+        val editor: SharedPreferences.Editor = prefsListes.edit()
+        editor.clear()
         editor.putString(pseudoRecu, newProfilJSON)
         editor.apply()
     }
@@ -131,16 +127,19 @@ class ChoixListActivity() : AppCompatActivity(), View.OnClickListener, ListeAdap
     /**
      * Quand une liste est cliquée on change d'activité pout aller sur l'activité ShowListActivity
      *
-     * @param list
+     * @param liste
      */
-    override fun onListClicked(list: ListeToDo) {
-        Log.d("ChoixListActivity", "onListClicked $list")
-        Toast.makeText(this, list.titreListeToDo, Toast.LENGTH_LONG).show()
+    override fun onListClicked(liste: ListeToDo) {
+        Log.d("ChoixListActivity", "onListClicked $liste")
+        Toast.makeText(this, liste.titreListeToDo, Toast.LENGTH_LONG).show()
 
-        /*
-        Intent intent = new Intent(this, ShowListActivity.class)
-        startActivity()
-         */
 
+        val titreListe = liste.titreListeToDo
+        val bundleTitre = Bundle()
+        bundleTitre.putString("titre", titreListe)
+
+        val afficherShowListActivity = Intent(this, ShowListActivity::class.java)
+        afficherShowListActivity.putExtras(bundleTitre)
+        startActivity(afficherShowListActivity)
     }
 }

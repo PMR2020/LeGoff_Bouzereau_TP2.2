@@ -9,24 +9,33 @@ import androidx.recyclerview.widget.RecyclerView
 import com.centralelille.sequence1.R
 import com.centralelille.sequence1.data.ListeToDo
 
+/**
+ * Un adapter a besoin d'un ViewHolder
+ *
+ * @property onListListener
+ */
 class ListeAdapter(private val onListListener: OnListListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val dataSet: MutableList<ListeToDo> = mutableListOf()
 
+    // 1. Appelée par le RecyclerView pour avoir une idée du nombre d'items à afficher
     override fun getItemCount(): Int = dataSet.size
 
     fun showData(newDataSet: List<ListeToDo>) {
         dataSet.clear()
         dataSet.addAll(newDataSet)
+        // Should refresh the view
         notifyDataSetChanged()
     }
 
+    // 2. Le RecyclerView demande ensuite la vue dans une certaine position
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ListViewHolder(inflater.inflate(R.layout.liste, parent, false))
     }
 
+    // 3. Pour mettre les données dans le ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         Log.d("ItemAdapter", "onBindViewHolder $position")
         when (holder) {

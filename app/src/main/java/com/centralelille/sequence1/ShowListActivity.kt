@@ -29,6 +29,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener, TaskAdapter.
     private lateinit var prefs: SharedPreferences
     private lateinit var prefsTasks: SharedPreferences
 
+    private lateinit var pseudoRecu: String
     private lateinit var listeRecue: String
     private lateinit var listeItemToDo: ArrayList<ItemToDo>
 
@@ -36,18 +37,18 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener, TaskAdapter.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_list)
 
-        val bundleListeName: Bundle = this.getIntent().getExtras()
+        val bundleData: Bundle = this.getIntent().getExtras()
 
-        listeRecue = bundleListeName.getString("")
+        pseudoRecu = bundleData.getString("pseudo")
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefsTasks = getSharedPreferences("", 0)
+        prefsTasks = getSharedPreferences("DATA", 0)
 
         refOkBtn = findViewById(R.id.buttonNewItem)
         listOfTask = findViewById(R.id.listOfItem)
         refTxtNewItem = findViewById(R.id.editTextItem)
         refCheckBox = findViewById(R.id.checkBox)
 
-        listeItemToDo = getItems(listeRecue)
+        //listeItemToDo = getItems(listeRecue)
         val dataSet: MutableList<ItemToDo> = mutableListOf()
 
         repeat(listeItemToDo.size) {
@@ -61,7 +62,10 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener, TaskAdapter.
         refOkBtn.setOnClickListener(this)
     }
 
-    private fun getItems(titreListe: String): ArrayList<ItemToDo> {
+    private fun getItems(pseudo: String, titreListe: String): ArrayList<ItemToDo> {
+
+        //val listeListeToDo: ArrayList<ListeToDo> = ChoixListActivity.getLists(pseudo)
+
         val liste = prefsTasks.getString(titreListe, "New")
         val gson = Gson()
         Log.i("testshowlistact", liste)
