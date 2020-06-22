@@ -1,15 +1,19 @@
 package com.centralelille.sequence1
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.centralelille.sequence1.dataAPI.DataProvider
+import kotlinx.coroutines.*
 
 /**
  * Commentaire
@@ -23,6 +27,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var prefs: SharedPreferences
     private lateinit var pseudoPrefs: String
 
+    /*
+    private val activityScope = CoroutineScope(
+        SupervisorJob()
+                + Dispatchers.Main
+                + CoroutineExceptionHandler { _, throwable ->
+            Log.e("MainActivity", "CoroutineExceptionHandler : ${throwable.message}")
+        }
+    )
+     */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,6 +48,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         refBtnOk.setOnClickListener(this)
         refEdtPseudo.setOnClickListener(this)
+
+        //loadUsers()
     }
 
     override fun onStart() {
@@ -44,6 +60,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         refEdtPseudo.setText(pseudoPrefs)
     }
+
+    /*
+    fun loadUsers() {
+        activityScope.launch {
+
+            // main
+            val user = DataProvider.getUsersFromApi()
+            // main
+            Log.i("testRetrofit",user.toString())
+        }
+
+    }
+
+     */
 
     override fun onClick(v: View?) {
         val pseudo = refEdtPseudo.text.toString()

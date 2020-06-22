@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.centralelille.sequence1.R
@@ -24,7 +26,7 @@ class TaskAdapter(private val onItemListener: OnItemListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ItemViewHolder(inflater.inflate(R.layout.liste, parent, false))
+        return ItemViewHolder(inflater.inflate(R.layout.item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -36,6 +38,7 @@ class TaskAdapter(private val onItemListener: OnItemListener) :
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.title)
+        private val checkButton: CheckBox = itemView.findViewById(R.id.checkBox)
 
         init {
             itemView.setOnClickListener {
@@ -49,6 +52,7 @@ class TaskAdapter(private val onItemListener: OnItemListener) :
 
         fun bind(item: ItemToDo) {
             title.text = item.description
+            checkButton.isChecked = item.fait
         }
     }
 

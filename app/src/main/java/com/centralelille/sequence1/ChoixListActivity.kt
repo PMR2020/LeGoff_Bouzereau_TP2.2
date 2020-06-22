@@ -70,7 +70,6 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListeAdapte
             Log.i("testchoixlistact", "création d'un nouveau profil")
 
             val editor: SharedPreferences.Editor = prefsListes.edit()
-            editor.clear()
             editor.putString(pseudo, newProfilJSON)
             editor.apply()
 
@@ -96,7 +95,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListeAdapte
 
         when (v?.id) {
             R.id.buttonNewList -> {
-                alert(pseudoRecu)
+                alert("Nouvelle liste créée")
                 val l = ListeToDo(newListTitle)
                 profilListeToDo.listesToDo.add(l)
                 Log.i("testchoixlistact", profilListeToDo.toString())
@@ -108,7 +107,6 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListeAdapte
 
         // Edit shared preference (to put data)
         val editor: SharedPreferences.Editor = prefsListes.edit()
-        editor.clear()
         editor.putString(pseudoRecu, newProfilJSON)
         editor.apply()
     }
@@ -137,6 +135,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListeAdapte
         val titreListe = liste.titreListeToDo
         val bundleTitre = Bundle()
         bundleTitre.putString("titre", titreListe)
+        bundleTitre.putString("pseudo", pseudoRecu)
 
         val afficherShowListActivity = Intent(this, ShowListActivity::class.java)
         afficherShowListActivity.putExtras(bundleTitre)
