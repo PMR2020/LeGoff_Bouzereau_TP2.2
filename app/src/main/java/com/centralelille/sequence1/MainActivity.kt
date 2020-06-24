@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.centralelille.sequence1.dataAPI.DataProvider
 import kotlinx.coroutines.*
+import java.lang.Exception
 
 /**
  * Commentaire
@@ -23,11 +24,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var refBtnOk: View
     private lateinit var refEdtPseudo: EditText
+    private lateinit var refEdtPass: EditText
 
     private lateinit var prefs: SharedPreferences
     private lateinit var pseudoPrefs: String
 
-    /*
     private val activityScope = CoroutineScope(
         SupervisorJob()
                 + Dispatchers.Main
@@ -35,7 +36,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Log.e("MainActivity", "CoroutineExceptionHandler : ${throwable.message}")
         }
     )
-     */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +43,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         refBtnOk = findViewById(R.id.buttonNewItem)
         refEdtPseudo = findViewById(R.id.editPseudo)
+        refEdtPass = findViewById(R.id.editPass)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
+        getAdminHash()
 
         refBtnOk.setOnClickListener(this)
-        refEdtPseudo.setOnClickListener(this)
-
-        //loadUsers()
     }
 
     override fun onStart() {
@@ -61,35 +60,49 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         refEdtPseudo.setText(pseudoPrefs)
     }
 
-    /*
-    fun loadUsers() {
-        activityScope.launch {
-
-            // main
-            val user = DataProvider.getUsersFromApi()
-            // main
-            Log.i("testRetrofit",user.toString())
-        }
-
-    }
-
-     */
-
     override fun onClick(v: View?) {
         val pseudo = refEdtPseudo.text.toString()
-        val bundlePseudo = Bundle()
-        bundlePseudo.putString("pseudo", pseudo)
+        val pass = refEdtPass.text.toString()
 
         when (v?.id) {
             R.id.buttonNewItem -> {
-                val editor: SharedPreferences.Editor = prefs.edit()
-                editor.clear()
-                editor.putString("pseudo_prefs", pseudo)
-                editor.apply()
+                activityScope.launch {
+                    try {
+                        val reponse = DataProvider.authenticate(pseudo, pass)
+                        val editor: SharedPreferences.Editor = prefs.edit()
+                        editor.clear()
+                        editor.putString("pseudo_prefs", pseudo)
+                        editor.putString("currentUserHash", reponse.hash)
+                        editor.apply()
+                        val afficherChoixListActivity =
+                            Intent(this@MainActivity, ChoixListActivity::class.java)
+                        startActivity(afficherChoixListActivity)
+                    } catch(e: Exception) {
+                        Log.i("testRetrofit", "authenticate à pas marché")
+                        //Tentative de création d'un nouvel utilisateur
+                        try {
+                            val adminHash = prefs.getString("adminHash", "no Hash")
+                            val newUserResponse =
+                                DataProvider.insertNewUser(pseudo, pass, adminHash)
+                            if (newUserResponse.success) {
+                                Log.i("testRetrofit", "appel à servicepassé, pb dans main")
+                                var hash = DataProvider.authenticate(pseudo, pass).hash
+                                val editor: SharedPreferences.Editor = prefs.edit()
+                                editor.clear()
+                                editor.putString("pseudo_prefs", pseudo)
+                                editor.putString("currentUserHash", hash)
+                                editor.apply()
+                                val afficherChoixListActivity =
+                                    Intent(this@MainActivity, ChoixListActivity::class.java)
+                                startActivity(afficherChoixListActivity)
+                            }
+                        }
+                        catch(e: Exception){
+                            alert("Mot de passe incorrect ou pseudo déjà utilisé /n Veuillez rééssayer")
+                        }
+                    }
 
-                val afficherChoixListActivity: Intent = Intent(this, ChoixListActivity::class.java)
-                afficherChoixListActivity.putExtras(bundlePseudo)
-                startActivity(afficherChoixListActivity)
+                }
             }
         }
     }
@@ -111,6 +124,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    fun getAdminHash(){
+        activityScope.launch {
+            val reponse = DataProvider.authenticate("tom", "web")
+            if (reponse.success){
+                val editor: SharedPreferences.Editor = prefs.edit()
+                editor.putString("adminHash", reponse.hash)
+                Log.i("testRetrofit",reponse.hash)
+                editor.apply()
+            }
+        }
     }
 
     //Gestion deboguage
